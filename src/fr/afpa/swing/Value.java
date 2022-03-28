@@ -38,7 +38,7 @@ public class Value {
     public static void reInit() {
         life = lifeMax;
         nbTentative = 0;
-        valeurRandom = random.nextInt(valeurRandomMax + 1) + 1;
+        valeurRandom = random.nextInt(valeurRandomMax + 1);
         System.out.println("Valeur généré = " + valeurRandom);
     }
 

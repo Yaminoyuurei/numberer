@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="NumberGame:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/NumberGame_jar</output-path>
+    <root id="root">
+      <element id="archive" name="NumberGame.jar">
+        <element id="module-output" name="NumberGame" />
+      </element>
+    </root>
+  </artifact>
+</component>
