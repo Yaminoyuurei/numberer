@@ -41,8 +41,13 @@ public class Window extends JFrame implements ActionListener {
         JLabel nbMax = new JLabel("<html><h4>Valeur aléatoire max :</h4></html>");
         nbMax.setForeground(Color.white);
         left.add(nbMax);
-
-        nbMaxText = new JTextField("1000");
+        nbMaxText = new JTextField();
+        if (Value.getValeurRandomMax()==0){
+            nbMaxText.setText("1000");
+        }
+        else {
+            nbMaxText.setText(""+Value.getValeurRandomMax());
+        }
         nbMaxText.setPreferredSize(new Dimension(150, 30));
         nbMaxText.setBackground(Color.DARK_GRAY);
         nbMaxText.setForeground(Color.white);
@@ -52,7 +57,12 @@ public class Window extends JFrame implements ActionListener {
         nbLife.setForeground(Color.white);
         left.add(nbLife);
 
-        nbLifeText = new JTextField("8");
+        nbLifeText = new JTextField();
+        if (Value.getLifeMax() == 0){
+            nbLifeText.setText("8");
+        }else{
+            nbLifeText.setText(""+Value.getLifeMax());
+        }
         nbLifeText.setPreferredSize(new Dimension(150, 30));
         nbLifeText.setBackground(Color.DARK_GRAY);
         nbLifeText.setForeground(Color.white);
