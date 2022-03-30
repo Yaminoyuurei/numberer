@@ -1,13 +1,17 @@
 package fr.afpa.swing;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
-public class Window extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener, ChangeListener {
     private static JLabel life;
+    private static JLabel rulesLabel;
     private static JTextField text2;
     private static JLabel text3;
     private static JLabel text4;
@@ -17,73 +21,82 @@ public class Window extends JFrame implements ActionListener {
     private static JButton resetbtn;
     private static JPanel item;
     private static JButton newGame;
-    private static JPanel menu;
     private static JTextField nbMaxText;
-    private static JTextField nbLifeText;
+    private static JSlider nbLifeSlider;
     private static JLabel errorCheck;
+    private static JLabel nbMax;
+    private static JLabel nbLife;
 
-    public Window(String title) {
+    public Game(String title) {
         super(title);
+        ArrayList<Image> icons = new ArrayList<>();
+        icons.add(new ImageIcon("icons/shuffle16.png").getImage());
+        icons.add(new ImageIcon("icons/shuffle32.png").getImage());
+        icons.add(new ImageIcon("icons/shuffle64.png").getImage());
+        icons.add(new ImageIcon("icons/shuffle128.png").getImage());
+        setIconImages(icons);
         JPanel contentPane = (JPanel) this.getContentPane();//Creation du Panel Parent
+        Value.init("1000",8);
+        Value.reInit();
+        contentPane.setLayout(new BorderLayout());
+        contentPane.add(toolbar(), BorderLayout.NORTH);
+        contentPane.add(game(), BorderLayout.CENTER);
 
-        contentPane.add(mainMenu());
     }
 
-    private JPanel mainMenu() {
-        setSize(260,280);
-        menu = new JPanel(new GridLayout(1, 1));
+    private JToolBar toolbar() {
+        JToolBar toolbar = new JToolBar();
+        toolbar.setBackground(Color.BLACK);
+        toolbar.setFloatable(false);
 
 
-        JPanel left = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        left.setBackground(Color.black);
-        menu.add(left);
 
-        JLabel nbMax = new JLabel("<html><h4>Valeur aléatoire max :</h4></html>");
-        nbMax.setForeground(Color.white);
-        left.add(nbMax);
-        nbMaxText = new JTextField();
-        if (Value.getValeurRandomMax()==0){
-            nbMaxText.setText("1000");
-        }
-        else {
-            nbMaxText.setText(""+Value.getValeurRandomMax());
-        }
-        nbMaxText.setPreferredSize(new Dimension(150, 30));
-        nbMaxText.setBackground(Color.DARK_GRAY);
-        nbMaxText.setForeground(Color.white);
-        left.add(nbMaxText);
-
-        JLabel nbLife = new JLabel("<html><h4>Nombre de tentatives : (Max 12)</h4></html>");
-        nbLife.setForeground(Color.white);
-        left.add(nbLife);
-
-        nbLifeText = new JTextField();
-        if (Value.getLifeMax() == 0){
-            nbLifeText.setText("8");
-        }else{
-            nbLifeText.setText(""+Value.getLifeMax());
-        }
-        nbLifeText.setPreferredSize(new Dimension(150, 30));
-        nbLifeText.setBackground(Color.DARK_GRAY);
-        nbLifeText.setForeground(Color.white);
-        left.add(nbLifeText);
-
-        errorCheck = new JLabel("");
-        errorCheck.setForeground(Color.white);
-
-
-        newGame = new JButton("<html><h4>Jouer</h4><html>");
-        newGame.setPreferredSize(new Dimension(100, 30));
-        newGame.setBackground(Color.DARK_GRAY);
-        newGame.setForeground(Color.white);
+        newGame = new JButton(new ImageIcon("icons/new.png"));
+        newGame.setToolTipText("Relancer avec les paramètres actuels");
         newGame.addActionListener(this);
-        left.add(newGame);
-        left.add(errorCheck);
-        return menu;
+        newGame.setBorderPainted(false);
+        toolbar.add(newGame);
+
+        toolbar.addSeparator();
+
+        nbMax = new JLabel(" Valeur max : ");
+        nbMax.setForeground(Color.white);
+        toolbar.add(nbMax);
+
+        nbMaxText = new JTextField();
+        nbMaxText.setPreferredSize(new Dimension(100,25));
+        nbMaxText.setBackground(Color.darkGray);
+        nbMaxText.setForeground(Color.white);
+        if (Value.getValeurRandomMax() == 0) {
+            nbMaxText.setText("1000");
+        } else {
+            nbMaxText.setText("" + Value.getValeurRandomMax());
+        }
+        toolbar.add(nbMaxText);
+
+        toolbar.addSeparator();
+
+        nbLife = new JLabel("<html><font color ='red';size='+1'> ❤ </font><font color='white';size='+1'> 8</font></html>");
+        nbLife.setPreferredSize(new Dimension(50,30));
+        nbLife.setForeground(Color.white);
+        toolbar.add(nbLife);
+
+        nbLifeSlider = new JSlider(JSlider.HORIZONTAL,1,14,8);
+        nbLifeSlider.setPreferredSize(new Dimension(100,25));
+        nbLifeSlider.addChangeListener(this);
+        if (Value.getLifeMax() == 0){
+            nbLifeSlider.setValue(8);
+        }else{
+            nbLifeSlider.setValue(Value.getLifeMax());
+        }
+        nbLifeSlider.setBackground(Color.darkGray);
+        nbLifeSlider.setForeground(Color.white);
+        toolbar.add(nbLifeSlider);
+
+        return toolbar;
     }
 
     private JPanel game() {
-        setSize(520,280);
         item = new JPanel(new GridLayout(1, 2));
 
         JPanel left = new JPanel(null);
@@ -93,26 +106,17 @@ public class Window extends JFrame implements ActionListener {
         JPanel right = new JPanel(new GridLayout(1, 3));
         right.setBackground(Color.DARK_GRAY);
         item.add(right);
-        resetbtn = new JButton("<html><h5>⏪</h5></html>");
-        resetbtn.setHorizontalAlignment(JLabel.CENTER);
-        resetbtn.setBorder(null);
-        resetbtn.setBackground(Color.DARK_GRAY);
-        resetbtn.setForeground(Color.white);
-        resetbtn.setBounds(2, 2, 25, 25);
-        resetbtn.addActionListener(this);
-        ;
-        left.add(resetbtn);
 
         life = new JLabel(Value.autoLife());
-        life.setBounds(30, -2, (520 / 2) - 30, 30);
+        life.setBounds(2, -2, (520 / 2), 30);
         left.add(life);
 
-        JLabel text1 = new JLabel("<html><h4>Trouver un nombre entre 0 et " + Value.getValeurRandomMax() + "</h4></html>");
-        text1.setBounds(0, 35, 520 / 2, 30);
-        text1.setBorder(null);
-        text1.setHorizontalAlignment(JLabel.CENTER);
-        text1.setForeground(Color.white);
-        left.add(text1);
+        rulesLabel = new JLabel("<html><h4>Trouver un nombre entre 0 et " + Value.getValeurRandomMax() + "</h4></html>");
+        rulesLabel.setBounds(0, 35, 520 / 2, 30);
+        rulesLabel.setBorder(null);
+        rulesLabel.setHorizontalAlignment(JLabel.CENTER);
+        rulesLabel.setForeground(Color.white);
+        left.add(rulesLabel);
 
         check = new JLabel("<html><h2>Entrer un Nombre.</h2></html>");
         check.setBounds(0, 110, 520 / 2, 100);
@@ -215,26 +219,29 @@ public class Window extends JFrame implements ActionListener {
                 valide.setText("<html><h4>Tester</h4><html>");
                 Value.setEndGame(false);
             }
-        if (ex.getSource() == resetbtn) {
-            getContentPane().remove(item);
-            getContentPane().add(mainMenu());
-            getContentPane().validate();
-        }
         if (ex.getSource() == newGame) {
-            switch (Value.init(nbMaxText.getText(), nbLifeText.getText())) {
+            switch (Value.init(nbMaxText.getText(), nbLifeSlider.getValue())) {
                 case 0:
-                    errorCheck.setText("<html><h4 font color='red'>Revérifier les valeurs rentrés</h4></html>");
+                    JOptionPane.showMessageDialog(null,"Revérifier les valeurs rentrés","Erreur",JOptionPane.ERROR_MESSAGE);
                     break;
                 case 1:
                     Value.reInit();
-                    getContentPane().remove(menu);
-                    getContentPane().add(game());
-                    getContentPane().validate();
-                    break;
-                case 2:
-                    errorCheck.setText("<html><h4 font color='red'>Le nombre de vie n'est pas cohérant</h4></html>");
+                    life.setText(Value.autoLife());
+                    rulesLabel.setText("<html><h4>Trouver un nombre entre 0 et " + Value.getValeurRandomMax() + "</h4></html>");
+                    text3.setText("<html><h4>");
+                    text4.setText("<html><h4>");
+                    text5.setText("<html><h4>");
+                    check.setText("<html><h2>Entrer un Nombre.</h2></html>");
+                    valide.setText("<html><h4>Tester</h4><html>");
                     break;
             }
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if(e.getSource()==nbLifeSlider){
+            nbLife.setText("<html><font color ='red';size='+1'> ❤ </font><font color='white';size='+1'> "+nbLifeSlider.getValue()+"</font></html>");
         }
     }
 }

@@ -16,19 +16,12 @@ public class Value {
     private static String tentativeRt;
 
     // Methodes
-    public static int init(String random,String life){
+    public static int init(String random,int life){
         System.out.println("Valeur 1 : "+random+" Valeur 2 : "+life);
-        if (checkInt(random) & checkInt(life)){
+        if (checkInt(random)){
             valeurRandomMax = Integer.parseInt(random);
-            lifeMax = Integer.parseInt(life);
-            if (lifeMax > 0 & lifeMax <= 12){
-                System.out.println("Lancement du jeu");
-                return 1;
-            }
-            else {
-                System.out.println("Life error");
-                return 2;
-            }
+            lifeMax = life;
+            return 1;
         }
         else {
             System.out.println("Erreur de syntaxe");
@@ -51,6 +44,7 @@ public class Value {
         }
         return true;
     }
+
 
     public static String testNumber(String valeurChoisis) {
         if (checkInt(valeurChoisis)) {
