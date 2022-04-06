@@ -1,6 +1,5 @@
 package fr.afpa.swing;
 
-import java.net.URL;
 import java.util.Random;
 
 public class Value {
@@ -16,18 +15,18 @@ public class Value {
     private static String tentativeRt;
 
     // Methodes
-    public static int init(String random,int life){
-        System.out.println("Valeur 1 : "+random+" Valeur 2 : "+life);
-        if (checkInt(random)){
+    public static int init(String random, int life) {
+        System.out.println("Valeur 1 : " + random + " Valeur 2 : " + life);
+        if (checkInt(random)) {
             valeurRandomMax = Integer.parseInt(random);
             lifeMax = life;
             return 1;
-        }
-        else {
+        } else {
             System.out.println("Erreur de syntaxe");
             return 0;
         }
     }
+
     public static void reInit() {
         life = lifeMax;
         nbTentative = 0;
@@ -37,14 +36,13 @@ public class Value {
 
     private static boolean checkInt(String numberCheck) {
         try {
-            int valeurConv = Integer.parseInt(numberCheck);
+            Integer.parseInt(numberCheck);
         } catch (NumberFormatException e) {
             System.out.println("(" + numberCheck + ") n'est pas un nombre");
             return false;
         }
         return true;
     }
-
 
     public static String testNumber(String valeurChoisis) {
         if (checkInt(valeurChoisis)) {
@@ -64,8 +62,7 @@ public class Value {
                 nbTentative++;
                 return "=";
             }
-        }
-        else {
+        } else {
             return "?";
         }
     }
@@ -140,7 +137,3 @@ public class Value {
         Value.gameStart = gameStart;
     }
 }
-
-
-
-

@@ -18,12 +18,10 @@ public class Game extends JFrame implements ActionListener, ChangeListener {
     private static JLabel text5;
     private static JButton valide;
     private static JLabel check;
-    private static JButton resetbtn;
     private static JPanel item;
     private static JButton newGame;
     private static JTextField nbMaxText;
     private static JSlider nbLifeSlider;
-    private static JLabel errorCheck;
     private static JLabel nbMax;
     private static JLabel nbLife;
 
@@ -48,8 +46,6 @@ public class Game extends JFrame implements ActionListener, ChangeListener {
         JToolBar toolbar = new JToolBar();
         toolbar.setBackground(Color.BLACK);
         toolbar.setFloatable(false);
-
-
 
         newGame = new JButton(new ImageIcon("icons/new.png"));
         newGame.setToolTipText("Relancer avec les paramètres actuels");
